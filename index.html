@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abaqus 参数化建模智能体 · 作品集</title>
+<meta name="description" content="用自然语言驱动 Abaqus 参数化建模：LangGraph 编排 + 23 个内置技能 + 校验闸门 + 诊断修复。">
+<style>
+  * { box-sizing:border-box; }
+  :root {
+    --bg:#0a1622;
+    --bg2:#0e1e30;
+    --card:rgba(255,255,255,.045);
+    --line:rgba(120,180,220,.22);
+    --txt:#e6f0f8;
+    --dim:#93b0c7;
+    --cyan:#6fc4ee;
+    --blue:#38bdf8;
+    --amber:#e8b465;
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  .wrap { max-width:1120px; margin:0 auto; padding:0 24px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position:relative; overflow:hidden;
+    padding:72px 0 56px;
+    background:
+      radial-gradient(900px 460px at 78% -10%, rgba(56,189,248,.18), transparent 60%),
+      radial-gradient(700px 380px at 6% 8%, rgba(111,196,238,.10), transparent 62%),
+      linear-gradient(180deg,#0a1622,#0e1e30 78%);
+  }
+  .hero::after {
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(120,180,220,.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120,180,220,.09) 1px, transparent 1px);
+    background-size:56px 56px; opacity:.35; pointer-events:none;
+    mask-image:linear-gradient(180deg, rgba(0,0,0,.8), transparent 76%);
+  }
+  .hero > .wrap { position:relative; z-index:1; }
+  .eyebrow {
+    font-size:12px; letter-spacing:3.5px; color:var(--cyan);
+    font-weight:600; text-transform:uppercase;
+  }
+  h1 {
+    margin:16px 0 0; font-size:clamp(30px,4.6vw,52px); line-height:1.16; letter-spacing:.5px;
+    font-weight:700;
+  }
+  h1 em { font-style:normal; color:var(--blue); }
+  .lede { margin:18px 0 0; max-width:760px; font-size:17px; color:var(--dim); }
+  .lede b { color:#dceaf6; font-weight:600; }
+
+  .btns { display:flex; gap:14px; flex-wrap:wrap; margin-top:30px; }
+  .btn {
+    display:inline-flex; align-items:center; gap:9px;
+    padding:12px 22px; border-radius:9px; font-size:14.5px; font-weight:600;
+    text-decoration:none; transition:.18s;
+  }
+  .btn.primary { background:linear-gradient(135deg,#38bdf8,#2a8fd0); color:#04121c; }
+  .btn.primary:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(56,189,248,.32); }
+  .btn.ghost { border:1px solid var(--line); color:var(--txt); background:var(--card); }
+  .btn.ghost:hover { border-color:rgba(111,196,238,.55); background:rgba(111,196,238,.10); }
+
+  .stats { display:flex; gap:42px; flex-wrap:wrap; margin-top:52px; }
+  .stat .n { font-size:30px; font-weight:700; color:var(--blue); letter-spacing:.5px; }
+  .stat .l { font-size:12.5px; color:var(--dim); margin-top:2px; }
+
+  /* ---------- sections ---------- */
+  section { padding:64px 0; border-top:1px solid rgba(120,180,220,.14); }
+  .sec-label { font-size:12px; letter-spacing:3px; color:var(--cyan); font-weight:600; }
+  h2 { margin:12px 0 0; font-size:clamp(22px,2.6vw,30px); letter-spacing:.3px; }
+  .sub { margin:10px 0 0; color:var(--dim); font-size:15px; max-width:720px; }
+
+  /* ---------- video ---------- */
+  .player {
+    margin-top:28px; border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    background:#04101a; box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+  .player video { display:block; width:100%; height:auto; background:#000; }
+  .player .cap {
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    padding:12px 18px; font-size:13px; color:var(--dim); border-top:1px solid rgba(120,180,220,.16);
+    background:rgba(255,255,255,.03);
+  }
+  .player .cap a { color:var(--cyan); text-decoration:none; }
+  .player .cap a:hover { text-decoration:underline; }
+
+  /* ---------- cards ---------- */
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:32px; }
+  .card {
+    border:1px solid var(--line); border-radius:12px; padding:22px 22px 24px;
+    background:var(--card); position:relative; overflow:hidden;
+  }
+  .card .idx {
+    font-size:11.5px; letter-spacing:2px; color:var(--cyan); font-weight:600;
+  }
+  .card h3 { margin:10px 0 8px; font-size:17.5px; }
+  .card p { margin:0; font-size:14px; color:var(--dim); }
+  .card .tag { display:inline-block; margin-top:14px; font-size:12px; color:var(--amber);
+    border:1px solid rgba(232,180,101,.35); background:rgba(232,180,101,.08);
+    padding:3px 9px; border-radius:5px; }
+
+  /* ---------- arch ---------- */
+  .arch { margin-top:28px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#04101a; }
+  .arch img { display:block; width:100%; height:auto; }
+
+  /* ---------- tech ---------- */
+  .tech { display:flex; gap:10px; flex-wrap:wrap; margin-top:26px; }
+  .tech span {
+    font-size:13px; padding:7px 13px; border-radius:7px;
+    border:1px solid var(--line); background:var(--card); color:#c9dced;
+  }
+  .tech span.k { border-color:rgba(56,189,248,.4); color:var(--blue); background:rgba(56,189,248,.08); }
+
+  pre {
+    margin:24px 0 0; padding:20px 22px; border-radius:12px;
+    background:#04121c; border:1px solid var(--line); overflow-x:auto;
+    font-family:"Cascadia Code","Consolas",monospace; font-size:13.5px; line-height:1.85; color:#bcd6e8;
+  }
+  pre .c { color:#5f7d95; }
+  pre .g { color:#7ee7a8; }
+
+  /* ---------- two col ---------- */
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:30px; }
+  .panel {
+    border:1px solid var(--line); border-radius:12px; padding:22px; background:var(--card);
+  }
+  .panel h3 { margin:0 0 12px; font-size:16.5px; }
+  .panel li { font-size:14px; color:var(--dim); margin-bottom:7px; }
+  .panel ul { margin:0; padding-left:18px; }
+
+  /* ---------- footer ---------- */
+  footer { padding:40px 0 56px; border-top:1px solid rgba(120,180,220,.14); }
+  footer .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    font-size:13px; color:#6f8ba3; }
+  footer a { color:var(--cyan); text-decoration:none; }
+
+  @media (max-width:860px) {
+    .grid3, .two { grid-template-columns:1fr; }
+    .stats { gap:28px; }
+    section { padding:48px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Portfolio · Abaqus Agent</div>
+    <h1>用一句话，让 Abaqus<br><em>把模型建出来、把作业跑出来</em></h1>
+    <p class="lede">
+      这是一个<strong>参数化建模智能体</strong>：自然语言进，模型文件和求解结果出。
+      它不写死脚本，而是把建模经验沉淀成<b>可插拔的技能</b>——技能里写清参数可行域、生成脚本和验收闸门，
+      agent 负责选技能、填参数、生成、校验，出错时自己诊断并修复。
+    </p>
+
+    <div class="btns">
+      <a class="btn primary" href="#demo">▶ 看 2 分钟演示</a>
+      <a class="btn ghost" href="demo_site/index.html">打开 3D 预览站</a>
+      <a class="btn ghost" href="https://github.com/cyf011588/abaqus-agent">GitHub 源码</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">23</div><div class="l">内置参数化技能</div></div>
+      <div class="stat"><div class="n">21</div><div class="l">可调用工具</div></div>
+      <div class="stat"><div class="n">21</div><div class="l">诊断规则</div></div>
+      <div class="stat"><div class="n">79</div><div class="l">单元测试全绿</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-label">Demo</div>
+    <h2>2 分钟，走完一条完整链路</h2>
+    <p class="sub">架构讲解 → 导入一份技能定义 → 用这个技能生成模型并跑几何校验 → 真机跑通 23 个案例 → 一个报错作业被诊断、修复、重跑完成。</p>
+
+    <div class="player">
+      <video controls preload="metadata" poster="docs/video_cover.png"
+             src="https://github.com/cyf011588/abaqus-agent/releases/download/v1.0/demo.mp4">
+        你的浏览器不支持内嵌视频，<a href="https://github.com/cyf011588/abaqus-agent/releases/download/v1.0/demo.mp4">点此下载</a>。
+      </video>
+      <div class="cap">
+        <span>1920×1080 · 2:10 · 全片在 Web 界面内完成，无终端画面</span>
+        <a href="https://github.com/cyf011588/abaqus-agent/releases/download/v1.0/demo.mp4">下载原片 ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">What it does</div>
+    <h2>三个能被验证的证据点</h2>
+    <p class="sub">不是"能聊天"，而是每一步都有可核查的产物。</p>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="idx">01 · 技能可插拔</div>
+        <h3>上传一份 yaml，能力列表立刻 +1</h3>
+        <p>技能是数据不是代码：生成脚本、参数契约、校验闸门写在 yaml 里。导入后当场生效，不改代码、不重启。</p>
+        <div class="tag">无需重启</div>
+      </div>
+      <div class="card">
+        <div class="idx">02 · 结果可验证</div>
+        <h3>生成完就过闸门，不合格不往下走</h3>
+        <p>关键字齐全、节点被引用、几何尺寸一致——校验不通过就不提交求解，避免"不报错但结果是错的"。</p>
+        <div class="tag">闸门式验收</div>
+      </div>
+      <div class="card">
+        <div class="idx">03 · 失败可自愈</div>
+        <h3>报错 → 归类 → 自动修 → 重跑</h3>
+        <p>把 Abaqus 含糊的报错归并成「原因 + 修法」，确定性语法错直接改（先备份），同一作业最多 3 轮。</p>
+        <div class="tag">真机 COMPLETED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Architecture</div>
+    <h2>四层：入口 → 编排 → 能力 → 执行</h2>
+    <p class="sub">工具层不依赖 LangGraph，只依赖 Python 标准库，可以单独跑、单独测；编排层才引入 LangGraph。</p>
+    <div class="arch">
+      <img src="docs/architecture.png" alt="Abaqus Agent 架构图">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Stack</div>
+    <h2>技术选型</h2>
+    <div class="tech">
+      <span class="k">LangGraph</span>
+      <span class="k">ReAct</span>
+      <span class="k">Python 3.12</span>
+      <span>Streamlit</span>
+      <span>SQLite 记忆</span>
+      <span>three.js（离线内联）</span>
+      <span>Abaqus 2020 / abq2020</span>
+      <span>pytest</span>
+      <span>LangSmith</span>
+      <span>纯标准库工具层</span>
+      <span>inp 解析与生成</span>
+      <span>JSON / YAML 契约</span>
+    </div>
+
+<pre><span class="c"># 1) 环境</span>
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+<span class="c"># 2) 跑测试（不需要 Abaqus，纯逻辑）</span>
+.\.venv\Scripts\python.exe -m pytest tests -q    <span class="g"># 79 passed</span>
+
+<span class="c"># 3) 起 Web（8502）</span>
+.\.venv\Scripts\python.exe -m streamlit run agent\webapp.py --server.port 8502
+
+<span class="c"># 4) 或者命令行</span>
+python -m agent <span class="g">"用 cantilever 生成悬臂梁 L=100，然后跑结构校验"</span></pre>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Scope</div>
+    <h2>做完了什么，边界在哪</h2>
+    <div class="two">
+      <div class="panel">
+        <h3>已实现</h3>
+        <ul>
+          <li>23 个参数化案例：静力 / 模态 / 屈曲 / 接触 / 热传导 / 显式动力 / 非线性 / 轴对称</li>
+          <li>Web 与命令行共用同一套编排，21 个工具按需调用</li>
+          <li>参数契约预检：类型、范围、枚举、命名规则</li>
+          <li>3D 预览：解析 inp 直接出 three.js 页面，断网可看</li>
+          <li>批量参数扫描：一次调用内部循环，扫完给汇总表</li>
+          <li>长期记忆：项目事实 / 历史算例 / 会话三层</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>边界与限制</h3>
+        <ul>
+          <li>求解、诊断、重跑需要本机 Abaqus（Windows），生成与校验不依赖</li>
+          <li>23 个案例是教学级小模型，不是工程级网格</li>
+          <li>自动修复只针对确定性语法错；收敛失败只给原因</li>
+          <li>脚本以 PowerShell 为主，Linux / macOS 未适配</li>
+          <li>仓库不含任何私有技能与求解数据</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Abaqus 参数化建模智能体 · 作品集 · 2026</span>
+    <span>
+      <a href="https://github.com/cyf011588/abaqus-agent">源码</a> ·
+      <a href="demo_site/index.html">3D 预览站</a> ·
+      <a href="https://github.com/cyf011588/abaqus-agent/releases">Release</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
