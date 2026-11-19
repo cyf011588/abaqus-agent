@@ -1,5 +1,9 @@
 # Abaqus Agent —— 参数化建模智能体
 
+**在线演示页：[cyf011588.github.io/abaqus-agent](https://cyf011588.github.io/abaqus-agent/)**　·　
+[23 个案例 3D 预览](https://cyf011588.github.io/abaqus-agent/demo_site/index.html)　·　
+[2 分钟视频](https://github.com/cyf011588/abaqus-agent/releases/latest/download/demo.mp4)
+
 用自然语言驱动 Abaqus：**说需求 → 它选技能 → 生成模型 → 跑校验闸门 → 提交求解 → 出错自动诊断并修复**。
 
 它不是又一个建模工具，而是在参数化建模之上加了一层 **工具调用 + 记忆 + 编排**：
