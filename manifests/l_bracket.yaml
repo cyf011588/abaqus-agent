@@ -1,0 +1,70 @@
+name: "L 型支架（S4R，一面固定+一面载荷）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  H:
+    type: float
+    min: 1.0
+    default: 100.0
+    desc: "竖直臂高"
+  L:
+    type: float
+    min: 1.0
+    default: 100.0
+    desc: "水平臂长"
+  t:
+    type: float
+    min: 1.0
+    default: 20.0
+    desc: "臂宽（厚度方向）"
+  thk:
+    type: float
+    min: 0.01
+    default: 5.0
+    desc: "板厚（壳 section）"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  P:
+    type: float
+    default: 1000.0
+    desc: "自由端总载荷"
+  nx1:
+    type: int
+    min: 1
+    default: 4
+    desc: "臂宽方向网格数"
+  my:
+    type: int
+    min: 2
+    default: 20
+    desc: "竖直臂总网格数"
+  nx2:
+    type: int
+    min: 1
+    default: 16
+    desc: "水平臂网格数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. L 支架：竖直板 + 水平板在 x=t 边共享节点（NodeTable 去重），底部固定、自由端 -y 载荷；
+  2. 改几何用 H/L/t，板厚 thk，网格 nx1/my/nx2；
+  3. 生成后 run_check(structure) 校验，3D 预览看两板连接边。

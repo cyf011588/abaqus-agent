@@ -1,0 +1,75 @@
+name: "平面纯钢框架（B31，柱梁刚接+柱底铰接，楼层竖向荷载）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  n_story:
+    type: int
+    min: 1
+    default: 2
+    desc: "层数"
+  n_bay:
+    type: int
+    min: 1
+    default: 2
+    desc: "跨数"
+  h:
+    type: float
+    min: 1.0
+    default: 3000.0
+    desc: "层高"
+  L:
+    type: float
+    min: 1.0
+    default: 6000.0
+    desc: "跨度"
+  b_col:
+    type: float
+    min: 1.0
+    default: 200.0
+    desc: "柱截面宽"
+  d_col:
+    type: float
+    min: 1.0
+    default: 200.0
+    desc: "柱截面高"
+  b_beam:
+    type: float
+    min: 1.0
+    default: 200.0
+    desc: "梁截面宽"
+  d_beam:
+    type: float
+    min: 1.0
+    default: 300.0
+    desc: "梁截面高"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  P:
+    type: float
+    default: 100000.0
+    desc: "每层每节点竖向荷载"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 纯钢框架：先问清层数 n_story、跨数 n_bay、层高 h、跨度 L、柱/梁截面（b_col/d_col/b_beam/d_beam）、荷载 P；
+  2. 柱梁共享节点刚接，柱底 BASE 铰接（U1=U2），全节点出平面约束 U3/R1/R2，楼层 FLOORS 竖向 -P；
+  3. 生成后 run_check(structure) 校验，3D 预览看框架几何；改参数即得不同框架。

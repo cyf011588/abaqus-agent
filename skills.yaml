@@ -1,0 +1,194 @@
+# ============================================================
+# 已接入的参数化建模技能（数据，不是代码）—— 公共部分，随仓库发布
+# 每个技能：build_script 是生成器入口；validators 是自检/验收闸门。
+# 只在本机有效的私有技能（真实项目、绝对路径）放 skills.local.yaml，
+# 加载时覆盖/追加到这里，且不进 git（见 .gitignore 与 skills.local.example.yaml）。
+# 新增技能：直接加一段，或在 Web 侧边栏「管理项目」里添加。
+# 增删改技能不会动到 agent 代码，也不需要重启（下次 load_config 生效）。
+# ============================================================
+
+skills:
+  cantilever:
+    name: 悬臂梁（C3D8R 体单元，端部固定+自由端载荷）
+    root: library/cantilever
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  l_bracket:
+    name: L 型支架（S4R，一面固定+一面载荷）
+    root: library/l_bracket
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  ss_beam:
+    name: 简支梁（B31 梁单元，两端简支+跨中载荷）
+    root: library/ss_beam
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  truss:
+    name: 平面三角桁架（T3D2，两铰支座+顶点载荷）
+    root: library/truss
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  modal_beam:
+    name: 悬臂梁模态分析（C3D8R + Frequency，前 N 阶固有频率）
+    root: library/modal_beam
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  thick_cylinder:
+    name: 平面应变厚壁圆筒（CPE4，内压，Lame 解对照）
+    root: library/thick_cylinder
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  buckle_column:
+    name: 受压柱线性屈曲（C3D8R + Buckle，欧拉临界载荷对照）
+    root: library/buckle_column
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  plastic_plate:
+    name: 带孔方板弹塑性拉伸（S4R + Plastic，孔边屈服）
+    root: library/plastic_plate
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  steel_frame:
+    name: 平面纯钢框架（B31，柱梁刚接+柱底铰接，楼层竖向荷载）
+    root: library/steel_frame
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  contact:
+    name: 两方块面面接触（C3D8R + Contact Pair，压缩）
+    root: library/contact
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  heat_slab:
+    name: 平板稳态热传导（DC2D4，两端固定温度，傅里叶定律对照）
+    root: library/heat_slab
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  axisym:
+    name: 轴对称圆盘轴向压缩（CAX4，顶部压力）
+    root: library/axisym
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  stiffened_plate:
+    name: 加筋板线性屈曲（S4R 板 + S4R 纵向肋，T 形共节点，两端受压）
+    root: library/stiffened_plate
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  thermal_stress:
+    name: 热应力立方体（C3D8RT，底面固支+温度梯度，热膨胀受压）
+    root: library/thermal_stress
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  thermal_plate:
+    name: 平板均匀升温热应力（CPE4T 平面应变，两端固支，σ=-EαΔT/(1-ν) 理论对照）
+    root: library/thermal_plate
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  thermal_seq:
+    name: 平板顺序耦合热应力（传热步 + 静力步读温度场，σ=±EαΔT/2 理论对照）
+    root: library/thermal_seq
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  dynamic_implicit:
+    name: 简支梁中点突加荷载（B31 隐式动力瞬态，动力放大系数 2 理论对照）
+    root: library/dynamic_implicit
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  dynamic_explicit:
+    name: 细长杆轴向冲击（C3D8R 显式动力，一维应力波 σ=√(Eρ)·v 理论对照）
+    root: library/dynamic_explicit
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  harmonic:
+    name: 悬臂梁端部简谐激励（B31 稳态动力扫频，共振峰对照一阶固有频率）
+    root: library/harmonic
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  nl_cantilever:
+    name: 悬臂梁大挠度（B31 nlgeom=YES，端部横向力，δ_lin=PL³/3EI 对照）
+    root: library/nl_cantilever
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  snap_through:
+    name: 浅拱跳跃失稳（B31 + *Static, Riks 弧长法 + nlgeom=YES，追踪极限点）
+    root: library/snap_through
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  plate_nl:
+    name: 四边简支板大挠度（S4R + 均布压力 + nlgeom=YES，薄膜效应，w_lin 对照）
+    root: library/plate_nl
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）
+  plate_hole:
+    name: 带孔方板拉伸（S4R 壳 + 两端位移拉伸，孔边应力集中）
+    root: library/plate_hole
+    build_script: build_inp.py
+    jobs_dir: .
+    validators:
+    - script: ../check_inp.py
+      desc: inp 结构完整性（关键字+节点引用）

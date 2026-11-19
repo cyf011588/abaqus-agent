@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abaqus 模型 3D 预览</title>
+<style>
+  :root { --ink:#1f2a3a; --muted:#5a6b7d; --line:#d7dee7; --bg:#f4f6f9; --accent:#3b6a9e; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:28px 20px 48px; background:var(--bg); color:var(--ink);
+         font-family:"Microsoft YaHei","PingFang SC",sans-serif; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  h1 { font-size:20px; margin:0 0 6px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:22px; line-height:1.7; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+  .card { display:block; background:#fff; border:1px solid var(--line); border-radius:12px;
+           padding:14px 16px; text-decoration:none; color:inherit;
+           transition:box-shadow .15s,border-color .15s,transform .15s; }
+  .card:hover { border-color:#9dbada; box-shadow:0 6px 18px rgba(59,106,158,.14); transform:translateY(-1px); }
+  .name { font-size:15px; font-weight:600; margin-bottom:6px; }
+  .meta { font-size:12px; color:var(--muted); word-break:break-all; margin-bottom:4px; }
+  .nums { font-size:12px; color:#7a8798; margin-bottom:10px; }
+  .go { font-size:12px; color:var(--accent); }
+  .empty { color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Abaqus 模型 3D 预览</h1>
+  <div class="sub">每个卡片是一个自包含的 HTML（three.js 已内联），点开即可旋转/缩放，不联网也能看。<br>
+  列表由 <code>scripts/build_demo_site.py</code> 生成。</div>
+  <div class="grid">
+  <a class="card" href="axisym/preview.html">
+    <div class="name">axisym</div>
+    <div class="meta">AXISYM.inp</div>
+    <div class="nums">189 节点 · 320 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="buckle_column/preview.html">
+    <div class="name">buckle_column</div>
+    <div class="meta">BUCKLE_COLUMN.inp</div>
+    <div class="nums">369 节点 · 656 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="cantilever/preview.html">
+    <div class="name">cantilever</div>
+    <div class="meta">ceshi1_fine.inp</div>
+    <div class="nums">2745 节点 · 3008 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="contact/preview.html">
+    <div class="name">contact</div>
+    <div class="meta">CONTACT.inp</div>
+    <div class="nums">250 节点 · 384 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="dynamic_explicit/preview.html">
+    <div class="name">dynamic_explicit</div>
+    <div class="meta">DYNAMIC_EXPLICIT.inp</div>
+    <div class="nums">234 节点 · 416 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="dynamic_implicit/preview.html">
+    <div class="name">dynamic_implicit</div>
+    <div class="meta">DYNAMIC_IMPLICIT.inp</div>
+    <div class="nums">41 节点 · 40 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="harmonic/preview.html">
+    <div class="name">harmonic</div>
+    <div class="meta">HARMONIC.inp</div>
+    <div class="nums">21 节点 · 20 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="heat_slab/preview.html">
+    <div class="name">heat_slab</div>
+    <div class="meta">HEAT_SLAB.inp</div>
+    <div class="nums">105 节点 · 160 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="l_bracket/preview.html">
+    <div class="name">l_bracket</div>
+    <div class="meta">L_BRACKET.inp</div>
+    <div class="nums">185 节点 · 288 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="modal_beam/preview.html">
+    <div class="name">modal_beam</div>
+    <div class="meta">MODAL_BEAM.inp</div>
+    <div class="nums">189 节点 · 336 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="nl_cantilever/preview.html">
+    <div class="name">nl_cantilever</div>
+    <div class="meta">NL_CANTILEVER.inp</div>
+    <div class="nums">41 节点 · 40 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="plastic_plate/preview.html">
+    <div class="name">plastic_plate</div>
+    <div class="meta">PLASTIC_PLATE.inp</div>
+    <div class="nums">624 节点 · 1152 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="plate_hole/preview.html">
+    <div class="name">plate_hole</div>
+    <div class="meta">PH-DEMO.inp</div>
+    <div class="nums">624 节点 · 1152 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="plate_nl/preview.html">
+    <div class="name">plate_nl</div>
+    <div class="meta">PLATE_NL.inp</div>
+    <div class="nums">441 节点 · 800 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="snap_through/preview.html">
+    <div class="name">snap_through</div>
+    <div class="meta">SNAP_THROUGH.inp</div>
+    <div class="nums">21 节点 · 20 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="ss_beam/preview.html">
+    <div class="name">ss_beam</div>
+    <div class="meta">SS_BEAM.inp</div>
+    <div class="nums">21 节点 · 20 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="steel_frame/preview.html">
+    <div class="name">steel_frame</div>
+    <div class="meta">IFrame-1S1B.inp</div>
+    <div class="nums">4 节点 · 3 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="stiff_plate/preview.html">
+    <div class="name">stiff_plate</div>
+    <div class="meta">StiffPlate-Buckle.inp</div>
+    <div class="nums">902 节点 · 1680 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="stiffened_plate/preview.html">
+    <div class="name">stiffened_plate</div>
+    <div class="meta">StiffPlate-L1000-W500-T10-R50x10-P1-M4.inp</div>
+    <div class="nums">902 节点 · 1680 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="thermal_plate/preview.html">
+    <div class="name">thermal_plate</div>
+    <div class="meta">THERMAL_PLATE.inp</div>
+    <div class="nums">231 节点 · 400 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="thermal_seq/preview.html">
+    <div class="name">thermal_seq</div>
+    <div class="meta">THERMAL_SEQ.inp</div>
+    <div class="nums">231 节点 · 400 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="thermal_stress/preview.html">
+    <div class="name">thermal_stress</div>
+    <div class="meta">THERMAL_STRESS.inp</div>
+    <div class="nums">729 节点 · 768 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="thick_cylinder/preview.html">
+    <div class="name">thick_cylinder</div>
+    <div class="meta">THICK_CYLINDER.inp</div>
+    <div class="nums">117 节点 · 192 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  <a class="card" href="truss/preview.html">
+    <div class="name">truss</div>
+    <div class="meta">TRUSS.inp</div>
+    <div class="nums">3 节点 · 3 单元</div>
+    <div class="go">打开 3D 预览 →</div>
+  </a>
+  </div>
+</div>
+</body>
+</html>

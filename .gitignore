@@ -1,0 +1,43 @@
+# 数据与密钥不提交
+data/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# 求解/修补的临时物
+*.bak
+*.inp.bak
+*.rpy
+*.rec
+*.mdg
+*.odb_f
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 求解产物（万一被放到 data/ 之外）
+*.odb
+*.sim
+*.sta
+*.msg
+*.dat
+*.prt
+*.lck
+*.log
+
+# 环境变量旁支与内部备忘
+.env.*
+!.env.example
+docs/publishing.md
+
+# 本地私有技能（课题组真实项目路径，只在本机有效）
+skills.local.yaml
+skills.imported.yaml

@@ -1,0 +1,80 @@
+name: "带孔方板弹塑性拉伸（S4R + Plastic，孔边屈服）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  W:
+    type: float
+    min: 1.0
+    default: 200.0
+    desc: "板宽"
+  H:
+    type: float
+    min: 1.0
+    default: 100.0
+    desc: "板高"
+  r:
+    type: float
+    min: 0.1
+    default: 20.0
+    desc: "孔半径"
+  t:
+    type: float
+    min: 0.01
+    default: 2.0
+    desc: "板厚"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  yield_stress:
+    type: float
+    min: 0.0
+    default: 235.0
+    desc: "屈服应力"
+  hard_stress:
+    type: float
+    min: 0.0
+    default: 300.0
+    desc: "硬化点应力"
+  hard_pe:
+    type: float
+    min: 0.0
+    default: 0.05
+    desc: "硬化点塑性应变"
+  u:
+    type: float
+    default: 2.0
+    desc: "端部对称拉伸位移"
+  nr:
+    type: int
+    min: 1
+    default: 12
+    desc: "径向网格层数"
+  nt:
+    type: int
+    min: 4
+    default: 48
+    desc: "环向网格段数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 带孔板弹塑性：材料含 *Plastic（第一行 yield_stress,0.，后续硬化点），左右对称位移拉伸；
+  2. 改几何 W/H/r/t，屈服 yield_stress / 硬化 hard_stress,hard_pe，网格 nr/nt；
+  3. 生成后 run_check(structure) 校验，3D 预览看孔边网格。

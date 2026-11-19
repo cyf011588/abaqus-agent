@@ -1,0 +1,143 @@
+# ============================================================
+# 评估任务集（21 条）
+# 四类：standard（标准链路）/ batch（批量扫描）/ qa（约束问答）/ anomaly（异常拒绝）
+# 判定字段：
+#   must_call      必须调用的工具
+#   must_not_call  禁止调用的工具
+#   gate_required  生成后必须跑闸门（generate_model 后必须 run_check）
+#   expect_reject  期望 agent 拒绝/报错（不硬跑）
+#   expect_keywords 最终回答必须包含的关键词（小写匹配）
+#
+# 任务全部落在仓库自带的案例上（library/），不依赖任何私有技能：
+# 只要装好 Abaqus 与 LLM key，这个任务集就可以原样重跑。
+# ============================================================
+
+tasks:
+  # ---- ① 标准链路：查知识 → 生成 → 校验 → 汇报 ----
+  - id: standard_cantilever_base
+    category: standard
+    prompt: "用 cantilever 生成悬臂梁：L=100、W=10、H=10，然后跑结构校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  - id: standard_cantilever_mesh
+    category: standard
+    prompt: "用 cantilever 生成 L=120、长度方向网格 40 的悬臂梁，并校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  - id: standard_plate_hole
+    category: standard
+    prompt: "用 plate_hole 生成一版带孔方板，跑结构校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  - id: standard_l_bracket
+    category: standard
+    prompt: "用 l_bracket 生成 L 型支架，跑结构校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  - id: standard_modal_beam
+    category: standard
+    prompt: "用 modal_beam 生成模态分析用的梁，跑结构校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  - id: standard_thick_cylinder
+    category: standard
+    prompt: "用 thick_cylinder 生成厚壁圆筒，跑结构校验"
+    must_call: [generate_model, run_check]
+    gate_required: true
+
+  # ---- ② 批量扫描：必须走 batch_run，禁止机械循环 ----
+  - id: batch_length
+    category: batch
+    prompt: "用 cantilever 扫梁长 80、100、120，每个都跑结构校验，给汇总表"
+    must_call: [batch_run]
+    gate_required: true
+
+  - id: batch_mesh
+    category: batch
+    prompt: "用 cantilever 扫长度方向网格 20、30、40，每个都跑结构校验"
+    must_call: [batch_run]
+    gate_required: true
+
+  - id: batch_load
+    category: batch
+    prompt: "用 cantilever 扫端部载荷 500、1000、1500，每个都跑结构校验"
+    must_call: [batch_run]
+    gate_required: true
+
+  # ---- ③ 约束问答：考知识检索与事实正确性 ----
+  - id: qa_gates
+    category: qa
+    prompt: "cantilever 有哪些校验闸门？"
+    expect_keywords: ["check_inp"]
+    must_not_call: [generate_model, batch_run, submit_job]
+
+  - id: qa_min_length
+    category: qa
+    prompt: "cantilever 的 L 参数下限是多少？"
+    expect_keywords: ["1"]
+    must_not_call: [generate_model, batch_run, submit_job]
+
+  - id: qa_element_type
+    category: qa
+    prompt: "cantilever 用的是哪种单元？"
+    expect_keywords: ["c3d8r"]
+    must_not_call: [generate_model, batch_run, submit_job]
+
+  - id: qa_skill_count
+    category: qa
+    prompt: "现在一共注册了多少个技能？"
+    must_not_call: [generate_model, batch_run, submit_job]
+
+  # ---- ④ 异常拒绝：参数不合规时要挡住，不能硬跑 ----
+  - id: anomaly_unknown_skill
+    category: anomaly
+    prompt: "用不存在的技能 abc 生成一个模型"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_length_abc
+    category: anomaly
+    prompt: "cantilever 生成时把 L 设为 abc（非数字）"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_length_below_min
+    category: anomaly
+    prompt: "cantilever 生成时把 L 设为 0.5"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_mesh_negative
+    category: anomaly
+    prompt: "cantilever 生成时把长度方向网格设为 -3"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_length_chinese
+    category: anomaly
+    prompt: "cantilever 生成时 L 用「一百」这个字符串"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_bad_job_name
+    category: anomaly
+    prompt: "cantilever 生成的作业名设成 bad name!"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_unknown_gate
+    category: anomaly
+    prompt: "对 cantilever 跑一个不存在的闸门 nope_check"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]
+
+  - id: anomaly_remove_ghost
+    category: anomaly
+    prompt: "删除一个不存在的技能 ghost"
+    expect_reject: true
+    must_not_call: [submit_job, batch_run]

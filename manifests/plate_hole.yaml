@@ -1,0 +1,65 @@
+name: "带孔方板拉伸（S4R，孔边应力集中）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  W:
+    type: float
+    min: 1.0
+    default: 200.0
+    desc: "板宽（x）"
+  H:
+    type: float
+    min: 1.0
+    default: 100.0
+    desc: "板高（y）"
+  r:
+    type: float
+    min: 0.1
+    default: 20.0
+    desc: "孔半径"
+  t:
+    type: float
+    min: 0.01
+    default: 2.0
+    desc: "板厚（壳）"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  u:
+    type: float
+    default: 0.5
+    desc: "端部拉伸位移（对称 ±u）"
+  nr:
+    type: int
+    min: 1
+    default: 12
+    desc: "径向网格层数"
+  nt:
+    type: int
+    min: 4
+    default: 48
+    desc: "环向网格段数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 带孔方板：映射网格（孔边径向加密、外边界方形），左右对称位移拉伸；
+  2. 改板尺寸用 W/H，孔用 r，板厚 t，网格 nr/nt；
+  3. 生成后 run_check(structure) 校验，3D 预览看孔边网格过渡。

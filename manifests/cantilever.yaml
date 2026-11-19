@@ -1,0 +1,65 @@
+name: "悬臂梁（C3D8R 体单元，端部固定+自由端载荷）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    min: 1.0
+    default: 100.0
+    desc: "梁长"
+  W:
+    type: float
+    min: 1.0
+    default: 10.0
+    desc: "梁宽"
+  H:
+    type: float
+    min: 1.0
+    default: 10.0
+    desc: "梁高"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  P:
+    type: float
+    default: 1000.0
+    desc: "自由端总载荷"
+  nx:
+    type: int
+    min: 1
+    default: 20
+    desc: "长度方向网格数"
+  ny:
+    type: int
+    min: 1
+    default: 2
+    desc: "宽度方向网格数"
+  nz:
+    type: int
+    min: 1
+    default: 2
+    desc: "高度方向网格数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 悬臂梁：一端固定（FIXED 约束自由度 1~3），自由端 -z 向集中力（TIP，均分到端面节点）；
+  2. 改几何用 L/W/H，网格用 nx/ny/nz，载荷用 P，材料用 E/nu；
+  3. 生成后 run_check(structure) 校验结构，再用 3D 预览确认外形。

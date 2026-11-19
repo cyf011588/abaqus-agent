@@ -1,0 +1,60 @@
+name: "两方块面面接触（C3D8R + Contact Pair，压缩）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  W:
+    type: float
+    min: 0.1
+    default: 10.0
+    desc: "方块边长"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  d:
+    type: float
+    default: 0.1
+    desc: "压缩位移"
+  mu:
+    type: float
+    min: 0.0
+    default: 0.2
+    desc: "摩擦系数"
+  nx:
+    type: int
+    min: 1
+    default: 4
+    desc: "x 向网格数"
+  ny:
+    type: int
+    min: 1
+    default: 4
+    desc: "y 向网格数"
+  nz:
+    type: int
+    min: 1
+    default: 4
+    desc: "z 向网格数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 两方块沿 z 堆叠：下块顶面 S2 / 上块底面 S1 组成接触对，*Surface Interaction 摩擦 mu，*Contact Pair 配对；
+  2. 下块底面 BASE 全约束，上块顶面 TOP 压缩位移 -d，*Step nlgeom=YES；
+  3. 生成后 run_check(structure) 校验，3D 预览看两方块叠放。

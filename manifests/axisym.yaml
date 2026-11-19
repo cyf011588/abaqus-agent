@@ -1,0 +1,55 @@
+name: "轴对称圆盘轴向压缩（CAX4，顶部压力）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  r1:
+    type: float
+    min: 0.1
+    default: 50.0
+    desc: "圆盘半径"
+  H:
+    type: float
+    min: 0.1
+    default: 20.0
+    desc: "圆盘厚度（轴向）"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  p:
+    type: float
+    default: 10.0
+    desc: "顶部压力"
+  nx:
+    type: int
+    min: 1
+    default: 20
+    desc: "径向网格数"
+  ny:
+    type: int
+    min: 1
+    default: 8
+    desc: "轴向网格数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 轴对称圆盘：CAX4（x=r 径向，y=z 轴向），对称轴 AXIS 约束 U1、底面 BASE 约束 U2；
+  2. 顶面 *Surface(S3) + *Dload 压力 p；
+  3. 生成后 run_check(structure) 校验，3D 预览看矩形截面。

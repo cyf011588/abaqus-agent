@@ -1,0 +1,55 @@
+name: "平面应变厚壁圆筒（CPE4，内压，Lame 解对照）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  a:
+    type: float
+    min: 0.1
+    default: 100.0
+    desc: "内径"
+  b:
+    type: float
+    min: 0.1
+    default: 200.0
+    desc: "外径（须 > a）"
+  p:
+    type: float
+    default: 10.0
+    desc: "内压"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  nr:
+    type: int
+    min: 1
+    default: 8
+    desc: "径向网格层数"
+  nt:
+    type: int
+    min: 2
+    default: 12
+    desc: "环向网格段数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 厚壁圆筒（1/4 模型）：SYMX 约束 U2、SYMY 约束 U1，内壁 *Surface(S4) + *Dload 内压 P；
+  2. 改几何 a/b、内压 p、网格 nr/nt；
+  3. 生成后 run_check(structure) 校验，3D 预览看圆环网格。

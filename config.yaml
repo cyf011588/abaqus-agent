@@ -1,0 +1,31 @@
+# ============================================================
+# Abaqus Agent —— 全局配置
+# 把「参数化建模 + 闸门校验 + Abaqus 提交/轮询」封装成可被大模型调用的工具，
+# 让处理 Abaqus 问题从「手搓命令」变成「自然语言下发、agent 编排执行」。
+# ============================================================
+
+agent:
+  name: "Abaqus 参数化建模智能体"
+  # 大模型走 OpenAI 兼容协议（DeepSeek / 硅基流动 SiliconFlow 均可）
+  llm:
+    base_url: ""            # 留空则读环境变量 LLM_BASE_URL
+    api_key_env: "LLM_API_KEY"
+    model: ""               # 留空则读环境变量 LLM_MODEL
+  memory_dir: "./data"      # 记忆库（SQLite），相对本目录
+  max_steps: 18             # 单次任务最多工具调用轮数（建模类任务要检索+生成+校验+修复，12 轮不够）
+
+# Abaqus 命令行（可能需绝对路径，如 D:\SIMULIA\Commands\abq2020）
+abaqus:
+  command: "abq2020"
+  cpus: 4                  # 默认 CPU 核数（生成 run 脚本时写入默认值）
+  gpus: 0                  # 默认 GPU 数；仅 Abaqus/Explicit 支持 GPU 加速，Standard 保持 0
+  double: false            # 默认单精度；显式动力/接触问题可开双精度（double=both）
+  env_bat: ""              # 可选：Abaqus 环境脚本绝对路径（如 C:\SIMULIA\2020\EstablishEnvironment.bat）
+
+# 联网检索（自主查询文献；本地知识不足时 LLM 自己查）
+search:
+  provider: "bing"          # bing（默认，国内可用、无需 key）| api（自定义搜索 API）| ddg
+  api_base: ""              # provider=api 时填搜索端点（GET ?q=...）
+  api_key_env: ""           # provider=api 时的 key 环境变量名（可选）
+
+# 已接入的参数化建模技能请写到同目录 skills.yaml（数据与配置分离，便于增删改）。

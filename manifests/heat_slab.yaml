@@ -1,0 +1,56 @@
+name: "平板稳态热传导（DC2D4，两端固定温度，傅里叶定律对照）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    min: 0.1
+    default: 100.0
+    desc: "板长"
+  H:
+    type: float
+    min: 0.1
+    default: 20.0
+    desc: "板高"
+  k:
+    type: float
+    min: 0.0
+    default: 50.0
+    desc: "导热系数"
+  T1:
+    type: float
+    default: 100.0
+    desc: "左端温度"
+  T2:
+    type: float
+    default: 20.0
+    desc: "右端温度"
+  nx:
+    type: int
+    min: 1
+    default: 20
+    desc: "长度方向网格数"
+  ny:
+    type: int
+    min: 1
+    default: 4
+    desc: "高度方向网格数"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 平板稳态热传导：DC2D4 + *Conductivity k，*Heat Transfer, steady state；
+  2. 左端 LEFT 温度 T1、右端 RIGHT 温度 T2（自由度 11）；
+  3. 生成后 run_check(structure) 校验，3D 预览看平板网格。

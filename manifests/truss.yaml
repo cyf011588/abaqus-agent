@@ -1,0 +1,50 @@
+name: "平面三角桁架（T3D2，两铰支座+顶点载荷）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    min: 1.0
+    default: 1000.0
+    desc: "底边跨"
+  H:
+    type: float
+    min: 1.0
+    default: 500.0
+    desc: "顶点高"
+  area:
+    type: float
+    min: 0.01
+    default: 100.0
+    desc: "杆截面积"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  P:
+    type: float
+    default: 1000.0
+    desc: "顶点集中力"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 三角桁架：A 铰支（1~3）、B 滚动（2）、顶点 C -y 集中力；
+  2. 改几何用 L/H，截面积 area，载荷 P；
+  3. 生成后 run_check(structure) 校验，3D 预览看三角线模型。

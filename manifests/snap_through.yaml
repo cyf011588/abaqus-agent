@@ -1,0 +1,56 @@
+name: "浅拱跳跃失稳（B31 + *Static, Riks 弧长法 + nlgeom=YES，追踪极限点）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    default: 1000.0
+    desc: "长度（x 向）"
+  f:
+    type: float
+    default: 40.0
+  b:
+    type: float
+    default: 20.0
+    desc: "几何参数 b"
+  h:
+    type: float
+    default: 20.0
+    desc: "截面高 / 板厚"
+  nx:
+    type: int
+    default: 20
+    desc: "x 向网格数"
+  P:
+    type: float
+    default: 500.0
+    desc: "载荷"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  job:
+    type: str
+    default: 'SNAP_THROUGH'
+    desc: "作业名"
+  out:
+    type: str
+    default: '.'
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  浅拱跳跃失稳（B31 + *Static, Riks 弧长法 + nlgeom=YES，追踪极限点）；参数含义见上面逐项 desc，未设 min/max 的表示不限制。
+  生成后先 run_check(structure)，再用 3D 预览确认几何与边界位置。

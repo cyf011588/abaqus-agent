@@ -1,0 +1,60 @@
+name: "平板均匀升温热应力（CPE4T 平面应变，两端固支，σ=-EαΔT/(1-ν) 理论对照）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    default: 200.0
+    desc: "长度（x 向）"
+  H:
+    type: float
+    default: 100.0
+    desc: "高度（z 向）"
+  nx:
+    type: int
+    default: 20
+    desc: "x 向网格数"
+  ny:
+    type: int
+    default: 10
+    desc: "y 向网格数"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  alpha:
+    type: float
+    default: 1.2e-05
+    desc: "线膨胀系数"
+  k:
+    type: float
+    default: 0.05
+    desc: "热导率 N/(s·K)，mm-t-s 制"
+  dT:
+    type: float
+    default: 100.0
+  job:
+    type: str
+    default: 'THERMAL_PLATE'
+    desc: "作业名"
+  out:
+    type: str
+    default: '.'
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  平板均匀升温热应力（CPE4T 平面应变，两端固支，σ=-EαΔT/(1-ν) 理论对照）；参数含义见上面逐项 desc，未设 min/max 的表示不限制。
+  生成后先 run_check(structure)，再用 3D 预览确认几何与边界位置。

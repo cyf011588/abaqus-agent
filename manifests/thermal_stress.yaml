@@ -1,0 +1,68 @@
+name: "热应力立方体（C3D8RT，底面固支+温度梯度，热膨胀受压）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    default: 100.0
+    desc: "长度（x 向）"
+  W:
+    type: float
+    default: 100.0
+    desc: "宽度（y 向）"
+  H:
+    type: float
+    default: 100.0
+    desc: "高度（z 向）"
+  nx:
+    type: int
+    default: 8
+    desc: "x 向网格数"
+  ny:
+    type: int
+    default: 8
+    desc: "y 向网格数"
+  nz:
+    type: int
+    default: 8
+    desc: "z 向网格数"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  alpha:
+    type: float
+    default: 1.2e-05
+    desc: "线膨胀系数"
+  k:
+    type: float
+    default: 0.05
+    desc: "热导率 N/(s·K)，mm-t-s 制"
+  dT:
+    type: float
+    default: 100.0
+  job:
+    type: str
+    default: 'THERMAL_STRESS'
+    desc: "作业名"
+  out:
+    type: str
+    default: '.'
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  热应力立方体（C3D8RT，底面固支+温度梯度，热膨胀受压）；参数含义见上面逐项 desc，未设 min/max 的表示不限制。
+  生成后先 run_check(structure)，再用 3D 预览确认几何与边界位置。

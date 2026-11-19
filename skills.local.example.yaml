@@ -1,0 +1,15 @@
+# 本地私有技能（模板）—— 复制成 skills.local.yaml 后填自己的项目
+#
+# 用途：私有/公司内部真实项目，路径只在本机有效。
+#       skills.local.yaml 不进 git，加载时会覆盖同名条目、追加新条目。
+# 也就是：公共 skills.yaml 保持干净可发布，你本机的私货放这里。
+
+skills:
+  my_project:
+    name: "我的私有模型（示例）"
+    root: "D:\\my\\abaqus_project"            # 生成器所在目录（绝对路径）
+    build_script: "build_model.py"            # 生成 inp 的入口脚本
+    jobs_dir: "jobs"                          # 产物输出目录（相对 root）
+    validators:                               # 自检/验收闸门（可多条）
+      - { script: "validate_model.py", desc: "结构自检 / 与基准对比" }
+      - { script: "check_geom.py",     desc: "几何 / 网格质量" }

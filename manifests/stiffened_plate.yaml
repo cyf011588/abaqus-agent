@@ -1,0 +1,76 @@
+name: "加筋板线性屈曲（S4R 板 + S4R 纵向肋，T 形共节点，两端受压）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  L:
+    type: float
+    min: 1.0
+    default: 1000.0
+    desc: "板长（x，加载方向）"
+  W:
+    type: float
+    min: 1.0
+    default: 500.0
+    desc: "板宽（y）"
+  t:
+    type: float
+    min: 0.1
+    default: 10.0
+    desc: "板厚"
+  h_r:
+    type: float
+    min: 0.1
+    default: 50.0
+    desc: "肋高"
+  t_r:
+    type: float
+    min: 0.1
+    default: 10.0
+    desc: "肋厚"
+  nx:
+    type: int
+    min: 1
+    default: 20
+    desc: "板 x 方向分段"
+  ny:
+    type: int
+    min: 2
+    default: 10
+    desc: "板 y 方向分段（偶数，肋在中线）"
+  P:
+    type: float
+    min: 0.0
+    default: 1.0
+    desc: "参考压力（N/mm，线载荷）"
+  nmodes:
+    type: int
+    min: 1
+    default: 4
+    desc: "屈曲模态阶数"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  job:
+    type: str
+    pattern: "^[A-Za-z0-9_.\\-]+$"
+    desc: "作业名"
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  1. 加筋板屈曲：先问清板长 L、宽 W、厚 t、肋高 h_r、肋厚 t_r、参考压力 P、模态阶数 nmodes；
+  2. 板与肋用 S4R 共节点（T 形截面），四边简支（板四边 U3 约束），两端均布受压（X0/X1 边节点力）；
+  3. 生成后 run_check(structure) 校验，3D 预览看板+肋几何；改参数即得不同加筋板。

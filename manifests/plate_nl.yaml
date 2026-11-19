@@ -1,0 +1,53 @@
+name: "四边简支板大挠度（S4R + 均布压力 + nlgeom=YES，薄膜效应，w_lin 对照）"
+build_script: "build_inp.py"
+jobs_dir: "."
+
+cli:
+  mode: flags
+
+params:
+  a:
+    type: float
+    default: 500.0
+    desc: "几何参数 a"
+  t:
+    type: float
+    default: 5.0
+    desc: "厚度"
+  nx:
+    type: int
+    default: 20
+    desc: "x 向网格数"
+  ny:
+    type: int
+    default: 20
+    desc: "y 向网格数"
+  q:
+    type: float
+    default: 0.1
+    desc: "均布压力"
+  E:
+    type: float
+    default: 210000.0
+    desc: "弹性模量"
+  nu:
+    type: float
+    default: 0.3
+    desc: "泊松比"
+  job:
+    type: str
+    default: 'PLATE_NL'
+    desc: "作业名"
+  out:
+    type: str
+    default: '.'
+
+validators:
+  - script: "../check_inp.py"
+    key: structure
+    desc: "inp 结构完整性（关键字 + 节点引用）"
+    cli: "check_inp.py <inp>"
+
+sop: |
+  四边简支板大挠度（S4R + 均布压力 + nlgeom=YES，薄膜效应，w_lin 对照）；参数含义见上面逐项 desc，未设 min/max 的表示不限制。
+  生成后先 run_check(structure)，再用 3D 预览确认几何与边界位置。
